@@ -7,10 +7,13 @@ import stellar.sdk.op.PaymentOperation
 import stellar.sdk.resp.TransactionPostResp
 import stellar.sdk.{Amount, KeyPair, TestNetwork, Transaction}
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
+import scala.concurrent.{Await, Future}
 
+/**
+  * This application demonstrates how to post transactions via a channel.
+  * Against the Test horizon instance, 256 transactions are typically cleared within 1 minute.
+  */
 object PayWithChannels extends LazyLogging {
 
   def main(args: Array[String]): Unit = {
@@ -38,6 +41,10 @@ object PayWithChannels extends LazyLogging {
 }
 
 
+/**
+  * This application demonstrates how posting transactions concurrently from a single account does not work.
+  * Running this will result in a failure to transaction most, but not all payments.
+  */
 object PayDirectly extends LazyLogging {
 
   import scala.concurrent.ExecutionContext.Implicits.global

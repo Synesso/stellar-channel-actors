@@ -55,13 +55,13 @@ class ChannelAccount(signerKey: KeyPair, accountKey: KeyPair, implicit val netwo
         val payment = PaymentOperation(recipient, amount, sourceAccount = Some(signerKey))
         batch match {
           case Nil =>
-            context.system.scheduler.scheduleOnce(1.second, self, Flush)
-            context.become(ready(accnKey, accn, replyTo, payment +: batch))
+            context.system.scheduler.scheduleOnce(1.second, self, Flush) // flush the batch in the future
+            context.become(ready(accnKey, accn, replyTo, Seq(payment)))  // add this payment to the batch
           case _ if batch.size == MaxTxnLength - 1 =>
-            transmit(payment +: batch)
-            context.become(ready(accnKey, accn.withIncSeq, replyTo))
+            transmit(payment +: batch)                               // transact the batch right now
+            context.become(ready(accnKey, accn.withIncSeq, replyTo)) // clear the batch
           case _ =>
-            context.become(ready(accnKey, accn, replyTo, payment +: batch))
+            context.become(ready(accnKey, accn, replyTo, payment +: batch)) // add this payment to the batch
         }
 
       case Flush if batch.nonEmpty =>

@@ -20,21 +20,19 @@ class Channel(signer: KeyPair, implicit val network: Network, width: Int = 10) e
 
   override def preStart = {
     val accounts = Vector.fill(width)(KeyPair.random)
+    val createOps = accounts.map(CreateAccountOperation(_, Amount.lumens(2)))
+
     val futureRouter = for {
       signerAccount <- network.account(signer).map(_.toAccount)
-      fundChannelAccounts <- Future.fromTry {
-        val createOps = accounts.map(CreateAccountOperation(_, Amount.lumens(2)))
-        createOps.foldLeft(Transaction(signerAccount))(_ add _).sign(signer)
-      }
-      response <- fundChannelAccounts.submit()
-    } yield {
-      val routees = accounts.map { channelAccount =>
+      createTxn = createOps.foldLeft(Transaction(signerAccount))(_ add _)
+      signedTxn <- Future.fromTry(createTxn.sign(signer))
+      response <- signedTxn.submit()
+      routees = accounts.map { channelAccount =>
         val r = context.actorOf(Props(classOf[ChannelAccount], signer, channelAccount, network))
         context watch r
         ActorRefRoutee(r)
       }
-      Router(RoundRobinRoutingLogic(), routees)
-    }
+    } yield Router(RoundRobinRoutingLogic(), routees)
 
     futureRouter onComplete {
       case Success(router) => self ! Initialise(router)
