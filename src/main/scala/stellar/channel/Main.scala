@@ -12,7 +12,7 @@ import scala.concurrent.{Await, Future}
 
 /**
   * This application demonstrates how to post transactions via a channel.
-  * Against the Test horizon instance, 256 transactions are typically cleared within 1 minute.
+  * Against the Test horizon instance, these 2400 transactions are typically cleared within 1 minute.
   */
 object PayWithChannels extends LazyLogging {
 
