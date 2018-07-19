@@ -39,7 +39,6 @@ class ChannelAccount(signerKey: KeyPair, accountKey: KeyPair, implicit val netwo
 
     def transmit(operations: Seq[PaymentOperation]) = {
       logger.debug(s"$self transmitting ${operations.size} payments")
-      operations.map(_.sourceAccount).zipWithIndex.foreach(z => logger.debug(z.toString))
       val paymentResponse: Future[TransactionPostResp] = for {
         txn <- Future.fromTry {
           operations.foldLeft(Transaction(accn))(_ add _).sign(accnKey, signerKey)
@@ -51,7 +50,6 @@ class ChannelAccount(signerKey: KeyPair, accountKey: KeyPair, implicit val netwo
 
     {
       case Pay(recipient, amount) =>
-        logger.debug(s"Received Pay($recipient, $amount)")
         val payment = PaymentOperation(recipient, amount, sourceAccount = Some(signerKey))
         batch match {
           case Nil =>

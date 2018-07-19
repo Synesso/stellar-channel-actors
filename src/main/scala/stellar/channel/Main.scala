@@ -30,7 +30,7 @@ object PayWithChannels extends LazyLogging {
 
       val channel = system.actorOf(Props(classOf[Channel], primaryAccount, TestNetwork, 24))
 
-      (0 to 255) foreach { _ =>
+      (1 to 2400) foreach { _ =>
         channel ! Pay(recipient, Amount.lumens(1))
       }
       channel ! Close
