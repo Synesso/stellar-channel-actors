@@ -29,7 +29,7 @@ lazy val root = (project in file("."))
   .settings(
     commonSettings,
     libraryDependencies ++= List(
-      "stellar.scala.sdk" %% "scala-stellar-sdk" % "0.1.4-SNAPSHOT",
+      "stellar.scala.sdk" %% "scala-stellar-sdk" % "0.1.4",
       "com.typesafe.akka" %% "akka-actor" % "2.5.13",
       "com.typesafe.akka" %% "akka-stream" % "2.5.13",
       "org.specs2" %% "specs2-core" % "4.0.0" % "test",
