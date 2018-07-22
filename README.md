@@ -1,4 +1,4 @@
-# Stellar Channel with Actors example
+# Stellar Channel with Actors
 
 Channels are a design pattern that uses proxy accounts to facilitate higher throughput transactions.
 
@@ -6,4 +6,4 @@ Channels are a design pattern that uses proxy accounts to facilitate higher thro
 
 `stellar.channel.PayDirectly` demonstrates how using a single channel to attempt to send just 32 payments fails.
 
-
+A detailed write-up of this project is on [Lumenauts](https://www.lumenauts.com/blog/boosting-tps-with-stellar-channels)
